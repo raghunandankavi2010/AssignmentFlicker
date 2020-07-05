@@ -19,10 +19,7 @@ class FlickerSearchViewModel @ExperimentalCoroutinesApi
     companion object {
         private val SEARCH_QUERY = "searchquery"
     }
-    private val _searchQuery: MutableLiveData<String> = savedStateHandle.getLiveData(SEARCH_QUERY)
 
-    // Only expose a immutable LiveData
-    val searchQuery : LiveData<String> = _searchQuery
     @Volatile
     private var currentQueryValue: String? = null
 
@@ -42,8 +39,6 @@ class FlickerSearchViewModel @ExperimentalCoroutinesApi
         return newResult
     }
 
-    fun saveCurrentSearchQuery(query: String){
-        savedStateHandle.set(SEARCH_QUERY, query)
-    }
+
 
 }

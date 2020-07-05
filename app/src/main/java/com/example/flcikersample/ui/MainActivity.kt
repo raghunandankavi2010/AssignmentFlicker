@@ -1,10 +1,12 @@
 package com.example.flcikersample.ui
 
+import android.R
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -47,18 +49,16 @@ class MainActivity : AppCompatActivity() {
         initAdapter()
 
 
-        flickerSearchViewModel.searchQuery
-            .observe(this, Observer<String> {
-                it?.let {
-                    query = it
-                    search(query)
-                }
-            })
-
+        val query = savedInstanceState?.getString(LAST_SEARCH_QUERY) ?: DEFAULT_QUERY
+        search(query)
         initSearch(query)
 
-
         binding.retryButton.setOnClickListener { adapter.retry() }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(LAST_SEARCH_QUERY, binding.searchImage.text.trim().toString())
     }
 
     private fun initAdapter() {
@@ -88,7 +88,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initSearch(query: String) {
-        flickerSearchViewModel.saveCurrentSearchQuery(query)
         binding.searchImage.setText(query)
 
         binding.searchImage.setOnEditorActionListener { _, actionId, _ ->
@@ -127,6 +126,8 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "query: $query, collecting $it")
                 adapter.presentData(it)
             }
+
+
         }
     }
 
