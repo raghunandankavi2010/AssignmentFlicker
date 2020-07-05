@@ -29,9 +29,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val adapter = FlickerImageAdapter()
     private var searchJob: Job? = null
+    private  var query: String = DEFAULT_QUERY
 
 
-
+    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -44,10 +45,18 @@ class MainActivity : AppCompatActivity() {
         binding.list.addItemDecoration(decoration)
 
         initAdapter()
-        flickerSearchViewModel.searchQuery.observe(this, Observer {
-            search(it)
-            initSearch(it)
-        })
+
+
+        flickerSearchViewModel.searchQuery
+            .observe(this, Observer<String> {
+                it?.let {
+                    query = it
+                    search(query)
+                }
+            })
+
+        initSearch(query)
+
 
         binding.retryButton.setOnClickListener { adapter.retry() }
     }
@@ -80,9 +89,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initSearch(query: String) {
         flickerSearchViewModel.saveCurrentSearchQuery(query)
-        binding.searchRepo.setText(query)
+        binding.searchImage.setText(query)
 
-        binding.searchRepo.setOnEditorActionListener { _, actionId, _ ->
+        binding.searchImage.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 updateRepoListFromInput()
                 true
@@ -90,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                 false
             }
         }
-        binding.searchRepo.setOnKeyListener { _, keyCode, event ->
+        binding.searchImage.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 updateRepoListFromInput()
                 true
@@ -101,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateRepoListFromInput() {
-        binding.searchRepo.text.trim().let {
+        binding.searchImage.text.trim().let {
             if (it.isNotEmpty()) {
                 binding.list.scrollToPosition(0)
                 search(it.toString())
@@ -118,8 +127,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "query: $query, collecting $it")
                 adapter.presentData(it)
             }
-
-
         }
     }
 

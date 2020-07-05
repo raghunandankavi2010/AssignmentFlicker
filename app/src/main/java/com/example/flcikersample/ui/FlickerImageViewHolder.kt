@@ -24,8 +24,9 @@ class FlickerImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     fun bind(photo: Photo?) {
-       title.text = photo?.title
+        title.text = photo?.title
         photo?.let {
+            title.text = photo.title
             val url = "https://farm".plus(photo.farm).plus(".staticflickr.com/")
                 .plus(photo.server)
                 .plus("/")
@@ -37,10 +38,8 @@ class FlickerImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 .load(url)
                 .placeholder(R.drawable.ic_launcher_background)
                 .fitCenter()
-                .into(imageView);
+                .into(imageView)
         }
-
-
     }
 
 }

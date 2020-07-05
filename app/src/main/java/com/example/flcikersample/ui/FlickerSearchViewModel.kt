@@ -5,13 +5,10 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.flcikersample.data.models.FlickerItem
 import com.example.flcikersample.data.models.Photo
-import com.example.flcikersample.data.models.Photos
 import com.example.flcikersample.repo.FlickerSearchRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 class FlickerSearchViewModel @ExperimentalCoroutinesApi
 @ViewModelInject constructor(
@@ -49,8 +46,4 @@ class FlickerSearchViewModel @ExperimentalCoroutinesApi
         savedStateHandle.set(SEARCH_QUERY, query)
     }
 
-    fun getCurrentSearchQuery(): String {
-        // Gets the current value of the user id from the saved state handle
-        return savedStateHandle.get(SEARCH_QUERY)?: ""
-    }
 }
