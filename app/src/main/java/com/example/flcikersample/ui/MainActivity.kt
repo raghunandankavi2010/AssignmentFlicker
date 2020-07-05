@@ -108,6 +108,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @ExperimentalCoroutinesApi
     private fun updateRepoListFromInput() {
         binding.searchImage.text.trim().let {
             if (it.isNotEmpty()) {
