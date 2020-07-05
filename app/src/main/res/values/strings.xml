@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FlcikerSample</string>
+    <string name="search_hint">search text here</string>
+    <string name="retry">Retry</string>
+</resources>
