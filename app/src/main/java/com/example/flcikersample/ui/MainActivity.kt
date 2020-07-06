@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
                 binding.retryButton.visibility = View.GONE
             }
             if (loadState is LoadState.Error) {
+                EspressoIdlingResource.decrement()
                 Toast.makeText(
                     this,
                     "\uD83D\uDE28 Wooops $loadState.message}",

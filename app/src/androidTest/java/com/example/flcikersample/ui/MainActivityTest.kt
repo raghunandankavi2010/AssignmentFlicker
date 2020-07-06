@@ -50,6 +50,18 @@ class MainActivityTest {
 
     }
 
+    @Test
+    fun testWhenNoNetwork() {
+
+        onView(withId(R.id.search_image)).perform(click())
+        onView(withId(R.id.search_image))
+            .perform(typeText(testSearchString))
+            .perform(pressKey(KeyEvent.KEYCODE_ENTER))
+        onView(withId(R.id.retry_button)).check(matches(isDisplayed()))
+
+
+    }
+
     @After
     fun unregisterIdlingResource() {
         if (mIdlingResource != null) {
