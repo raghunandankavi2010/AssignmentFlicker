@@ -1,21 +1,22 @@
 package com.example.flcikersample.ui
 
-import android.R
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.LoadType
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.test.espresso.IdlingResource
 import com.example.flcikersample.databinding.ActivityMainBinding
+import com.task.utils.EspressoIdlingResource
+
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -26,12 +27,11 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var  flickerSearchViewModel: FlickerSearchViewModel
+    private lateinit var flickerSearchViewModel: FlickerSearchViewModel
 
     private lateinit var binding: ActivityMainBinding
     private val adapter = FlickerImageAdapter()
     private var searchJob: Job? = null
-    private  var query: String = DEFAULT_QUERY
 
 
     @ExperimentalCoroutinesApi
@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
                 binding.progressBar.visibility = toVisibility(loadState == LoadState.Loading)
                 binding.retryButton.visibility = toVisibility(loadState is LoadState.Error)
             } else {
+                EspressoIdlingResource.decrement()
                 binding.list.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
                 binding.retryButton.visibility = View.GONE
@@ -87,6 +88,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @ExperimentalCoroutinesApi
     private fun initSearch(query: String) {
         binding.searchImage.setText(query)
 
@@ -122,14 +124,17 @@ class MainActivity : AppCompatActivity() {
     private fun search(query: String) {
         // Make sure we cancel the previous job before creating a new one
         searchJob?.cancel()
+
+
         searchJob = lifecycleScope.launch {
-            flickerSearchViewModel.searchFlicker(query).collect{
+
+            flickerSearchViewModel.searchFlicker(query).collect {
                 Log.d("MainActivity", "query: $query, collecting $it")
                 adapter.presentData(it)
+
             }
-
-
         }
+
     }
 
     private fun toVisibility(constraint: Boolean): Int = if (constraint) {
@@ -142,4 +147,6 @@ class MainActivity : AppCompatActivity() {
         private const val LAST_SEARCH_QUERY: String = "last_search_query"
         private const val DEFAULT_QUERY = ""
     }
+
+
 }
