@@ -1,7 +1,8 @@
-package com.example.flcikersample.data.models
+package com.example.flcikersample.repo
 
 import androidx.paging.PagingSource
 import com.example.flcikersample.api.FlickerService
+import com.example.flcikersample.data.models.Photo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import retrofit2.HttpException
 import java.io.IOException
